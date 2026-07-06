@@ -2,14 +2,18 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target; // Küpü buraya sürükleyeceğiz
-    public Vector3 offset = new Vector3(0, 100, -250);// Kamera mesafesi
+    public Transform player; // Buraya karakterini (Cube) sürükleyeceğiz
+    public Vector3 offset;   // Kamera ile karakter arasındaki mesafe
 
-    void Update()
+    void Start()
     {
-        if (target != null)
-        {
-            transform.position = target.position + offset;
-        }
+        // Oyun başladığında aradaki mesafeyi otomatik hesapla
+        offset = transform.position - player.position;
+    }
+
+    void LateUpdate() // Kameranın hareketinden sonra çalışması için
+    {
+        // Kamerayı karakterin pozisyonuna + mesafeye taşı
+        transform.position = player.position + offset;
     }
 }
