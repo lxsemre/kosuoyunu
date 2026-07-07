@@ -16,50 +16,41 @@ public class PlayerHealth : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
     }
 
-    // Büyük engele çarpma — yön tespiti burada
-    void OnCollisionEnter(Collision collision)
-    {
-        if (isDead) return;
-
-        if (collision.gameObject.CompareTag("BigObstacle"))
-        {
-            Vector3 normal = collision.contacts[0].normal;
-
-            float upDot = Vector3.Dot(normal, Vector3.up);
-            float forwardDot = Vector3.Dot(normal, -transform.forward);
-
-            if (upDot > 0.5f)
-            {
-                // ✅ Üstüne çıkıldı — hiçbir şey olmaz
-                Debug.Log("Üstüne çıkıldı - hasar yok");
-            }
-            else if (forwardDot > 0.5f)
-            {
-                // 💀 Önden çarptı — ölüm
-                Debug.Log("Önden çarpma - ölüm");
-                Die();
-            }
-            else
-            {
-                // 💥 Yandan çarptı — 1 can git + geri sek
-                Debug.Log("Yandan çarpma - 1 hasar");
-                TakeDamage();
-                if (playerMovement != null)
-                    playerMovement.BounceBack(normal.x);
-            }
-        }
-    }
-
-    // Sadece küçük engel ve Wall — BigObstacle ARTIK BURADA YOK ✅
     void OnTriggerEnter(Collider other)
     {
         if (isDead) return;
 
-        if (other.gameObject.CompareTag("SmallObstacle") || other.gameObject.CompareTag("Wall"))
+        // ✅ Büyük bloğun ÖN yüzüne çarpma → Ölüm
+        if (other.CompareTag("BigObstacleFront"))
+        {
+            Debug.Log("Büyük bloğun önüne çarptı - ÖLÜM");
+            Die();
+        }
+
+        // ✅ Büyük bloğun YAN yüzüne çarpma → 1 hasar
+        else if (other.CompareTag("BigObstacleSide"))
+        {
+            Debug.Log("Büyük bloğun yanına çarptı - 1 hasar");
+            TakeDamage();
+            // Hangi yandan çarptığını bul ve geri sek
+            float sideDir = other.transform.position.x - transform.position.x;
+            if (playerMovement != null)
+                playerMovement.BounceBack(sideDir > 0 ? 1f : -1f);
+        }
+
+        // Küçük engel ve duvar
+        else if (other.CompareTag("SmallObstacle") || other.CompareTag("Wall"))
         {
             TakeDamage();
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
         }
+    }
+
+    // Not: BigObstacle artık burada yok — üstüne çıkmak tamamen güvenli
+    // Ana collider sadece fizik içindir (üstte durmak)
+    void OnCollisionEnter(Collision collision)
+    {
+        // İleride başka çarpışma tipleri eklenebilir
     }
 
     public void TakeDamage()

@@ -18,7 +18,7 @@ public class ItemCollector : MonoBehaviour
                 ScoreManager.Instance.AddGold();
             else
                 Debug.LogError("ScoreManager.Instance NULL! ScoreManager sahneye eklenmemiş!");
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false); // Destroy yerine deaktif et — pool ile uyumlu
         }
         else if (other.CompareTag("Diamond"))
         {
@@ -27,7 +27,7 @@ public class ItemCollector : MonoBehaviour
                 ScoreManager.Instance.AddDiamond();
             else
                 Debug.LogError("ScoreManager.Instance NULL! ScoreManager sahneye eklenmemiş!");
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false); // Destroy yerine deaktif et — pool ile uyumlu
         }
     }
 }
