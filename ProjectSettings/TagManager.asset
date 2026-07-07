@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Obstacle
   - Ground
+  - SmallObstacle
+  - Wall
+  - BigObstacle
+  - Gold
+  - Diamond
   layers:
   - Default
   - TransparentFX

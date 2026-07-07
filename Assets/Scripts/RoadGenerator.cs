@@ -1,33 +1,52 @@
 using UnityEngine;
-using System.Collections.Generic; // Listeler için lazım
+using System.Collections.Generic;
 
 public class RoadGenerator : MonoBehaviour
 {
-    public GameObject roadPrefab;
-    public Transform player;
-    private List<GameObject> activeRoads = new List<GameObject>(); // Oluşturduğumuz yolları burada tutacağız
-    private float spawnZ = 50f;
-    private float roadLength = 50f;
+    [Header("Yol Ayarları")]
+    public GameObject[] roadPrefabs; // Farklı yol tasarımlarını tutacak liste
+    public float roadLength = 50f; // BİR yol parçasının Z eksenindeki uzunluğu (Bunu kendi yoluna göre değiştir!)
+    public int amountOfRoadsOnScreen = 5; // Ekranda aynı anda bulunacak yol sayısı
+    public float safeZone = 40f; // Karakter yolu geçtikten ne kadar sonra eski yol silinsin
 
-    void Update()
+    [Header("Bağlantılar")]
+    public Transform playerTransform; // Karakterin konumu
+
+    private float spawnZ = 0f; // Yeni yolun doğacağı Z noktası
+    private List<GameObject> activeRoads = new List<GameObject>();
+
+    void Start()
     {
-        if (player.position.z > spawnZ - 100f)
+        // Oyun başlarken ekrana ilk yol parçalarını diz
+        for (int i = 0; i < amountOfRoadsOnScreen; i++)
         {
-            SpawnRoad();
-        }
-
-        // Arkada kalan yolu silme kontrolü
-        if (activeRoads.Count > 0 && activeRoads[0].transform.position.z < player.position.z - 20f)
-        {
-            Destroy(activeRoads[0]); // Eski yolu yok et
-            activeRoads.RemoveAt(0); // Listeden çıkart
+            SpawnRoad(0);
         }
     }
 
-    void SpawnRoad()
+    void Update()
     {
-        GameObject newRoad = Instantiate(roadPrefab, new Vector3(0, 0, spawnZ), Quaternion.identity);
-        activeRoads.Add(newRoad); // Yeni oluşturulanı listeye ekle
-        spawnZ += roadLength;
+        // Karakterimiz ilerledikçe yeni yol üret ve arkada kalanı sil
+        if (playerTransform.position.z - safeZone > (spawnZ - amountOfRoadsOnScreen * roadLength))
+        {
+            // Eğer birden fazla yol prefabın varsa rastgele birini seçer
+            SpawnRoad(Random.Range(0, roadPrefabs.Length));
+            DeleteRoad();
+        }
+    }
+
+    void SpawnRoad(int prefabIndex)
+    {
+        // Yolu Z ekseninde spawnZ noktasına kopyala
+        GameObject go = Instantiate(roadPrefabs[prefabIndex], Vector3.forward * spawnZ, Quaternion.identity);
+        activeRoads.Add(go);
+        spawnZ += roadLength; // Bir sonraki yolun doğacağı yeri, yol uzunluğu kadar ileri at
+    }
+
+    void DeleteRoad()
+    {
+        // Arkada kalan en eski yolu (listenin 0. elemanını) sil
+        Destroy(activeRoads[0]);
+        activeRoads.RemoveAt(0);
     }
 }
