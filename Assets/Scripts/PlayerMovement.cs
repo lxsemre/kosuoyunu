@@ -128,10 +128,15 @@ public class PlayerMovement : MonoBehaviour
     // Yandan çarpınca önceki şeride geri döndür
     public void BounceBack(float normalX)
     {
-        if (normalX > 0.3f)        // Sağdan çarptı → sola git
-            targetX -= 2.5f;
-        else if (normalX < -0.3f)  // Soldan çarptı → sağa git
+        // normalX, engelin bizi ittiği yöndür. 
+        // Eğer normalX pozitifse (örn: 1), engel bizi sağa itiyordur (soldaki engele çarptık).
+        // Bu durumda sağdaki şeride geri dönmeliyiz -> targetX += 2.5f
+        if (normalX > 0.3f)
             targetX += 2.5f;
+        // Eğer normalX negatifse (örn: -1), engel bizi sola itiyordur (sağdaki engele çarptık).
+        // Bu durumda soldaki şeride geri dönmeliyiz -> targetX -= 2.5f
+        else if (normalX < -0.3f)
+            targetX -= 2.5f;
 
         // Şerit sınırını aşmasın
         targetX = Mathf.Clamp(targetX, -2.5f, 2.5f);
