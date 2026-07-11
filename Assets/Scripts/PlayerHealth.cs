@@ -21,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        // Küçük engel ve duvar (Trigger ile çalışmaya devam edebilir)
+
         if (other.CompareTag("SmallObstacle") || other.CompareTag("Wall"))
         {
             TakeDamage();
@@ -29,69 +29,68 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Not: BigObstacle artık burada yok — üstüne çıkmak tamamen güvenli
-    // Ana collider sadece fizik içindir (üstte durmak)
+
     void OnCollisionEnter(Collision collision)
     {
         if (isDead) return;
 
-        // "BigObstacle" etiketli büyük objeye çarptıysak
+        
         if (collision.gameObject.CompareTag("BigObstacle"))
         {
-            // Çarpışmanın hangi yüzeyden olduğunu matematiksel (normal) olarak alıyoruz
+   
             Vector3 normal = collision.GetContact(0).normal;
 
-            // 1. Y ekseni (Yukarı) -> Üstüne bastık (Zıplarken köşeye takılmaları tolere etmek için 0.1'e düşürdük)
+
             if (normal.y > 0.1f)
             {
-                // Güvenli bölge, üstünde koşmaya devam!
+
                 return;
             }
-            // 2. Z ekseni (Ön) -> Bloğun ön yüzüne çarptık
+
             else if (normal.z < -0.5f)
             {
-                // Bloğun sınırlarını (boyutlarını) alıyoruz
+
                 Collider obstacleCollider = collision.collider;
-                float obstacleTopY = obstacleCollider.bounds.max.y;           // Bloğun en üst noktası
-                float obstacleHeight = obstacleCollider.bounds.size.y;        // Bloğun toplam boyu
+                float obstacleTopY = obstacleCollider.bounds.max.y;          
+                float obstacleHeight = obstacleCollider.bounds.size.y;        
                 
-                // Üstten %10'luk güvenli bölgenin başlangıç Y noktası
+               
                 float safeZoneMinY = obstacleTopY - (obstacleHeight * 0.10f);
                 
-                // Karakterin bloğa temas ettiği tam nokta
+                
                 float hitPointY = collision.GetContact(0).point.y;
 
                 if (hitPointY >= safeZoneMinY)
                 {
-                    // %10'luk üst paya çarptı (Paçayı yırttı, tırmanabilir)
+                    
                     Debug.Log("Bloğun üst %10'luk payına çarptı - GÜVENLİ");
                     return;
                 }
                 else
                 {
-                    // %90'lık alt gövdeye tam tosladı
+                    
                     Debug.Log("Büyük objeye ÖNDEN (alt %90'a) çarptı -> ÖLÜM");
                     Die();
                 }
             }
-            // 3. X ekseni (Yanlar) -> Bloğun sol veya sağ yanına çarptık
+           
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
                 Debug.Log("Büyük objeye YANDAN çarptı -> -1 KALP");
                 
-                // Eğer hasar alabildiysek (ölümsüz değilsek) sekelim
+              
                 bool tookDamage = TakeDamage();
                 
                 if (tookDamage && playerMovement != null)
                 {
-                    // Unity'nin kendi çılgın fiziksel sekmesini iptal et (sadece Y hızını koru)
+                    
                     Rigidbody rb = GetComponent<Rigidbody>();
                     if (rb != null)
                     {
                         rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
                     }
 
-                    // Bizim yumuşak sekme kodumuzu çalıştır
+                   
                     playerMovement.BounceBack(normal.x);
                 }
             }
@@ -100,7 +99,7 @@ public class PlayerHealth : MonoBehaviour
 
     public bool TakeDamage()
     {
-        if (isInvincible) return false; // Zaten hasar aldıysa (yanıp sönüyorsa) tekrar hasar alma
+        if (isInvincible) return false; 
 
         currentHealth -= 1;
 
@@ -133,7 +132,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (meshRenderer == null) yield break;
         
-        isInvincible = true; // Hasar almazlığı başlat
+        isInvincible = true; 
         
         for (int i = 0; i < 3; i++)
         {
@@ -143,6 +142,6 @@ public class PlayerHealth : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         
-        isInvincible = false; // Hasar almazlığı bitir
+        isInvincible = false; 
     }
 }

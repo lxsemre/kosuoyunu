@@ -21,13 +21,11 @@ public class UIManager : MonoBehaviour
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
-        // Inspector'da boş kaldıysa otomatik bul
         if (scoreManager == null)
             scoreManager = FindFirstObjectByType<ScoreManager>();
         if (playerHealth == null)
             playerHealth = FindFirstObjectByType<PlayerHealth>();
     }
-
 
     void Update()
     {
@@ -42,7 +40,7 @@ public class UIManager : MonoBehaviour
         {
             for (int i = 0; i < hearts.Length; i++)
             {
-                if (hearts[i] != null) // ← NULL KORUMASI EKLENDİ
+                if (hearts[i] != null) 
                     hearts[i].SetActive(i < playerHealth.currentHealth);
             }
 

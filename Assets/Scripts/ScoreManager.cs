@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance; // ← Singleton eklendi, her yerden erişilir
+    public static ScoreManager Instance; 
 
     [Header("Puanlama Durumu")]
     public float score = 0f;
@@ -15,7 +15,6 @@ public class ScoreManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton yapısı — sadece bir tane olmasını garantiler
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
@@ -26,7 +25,6 @@ public class ScoreManager : MonoBehaviour
         score += Time.deltaTime * scorePerSecond;
     }
 
-    // Bu fonksiyon oyuncu objesindeki ayrı bir script tarafından çağrılacak
     public void AddGold()
     {
         goldCount += 1;
