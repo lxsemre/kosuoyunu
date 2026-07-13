@@ -11,6 +11,7 @@ TagManager:
   - BigObstacle
   - Gold
   - Diamond
+  - Ramp
   layers:
   - Default
   - TransparentFX

@@ -37,43 +37,31 @@ public class PlayerHealth : MonoBehaviour
         
         if (collision.gameObject.CompareTag("BigObstacle"))
         {
-   
             Vector3 normal = collision.GetContact(0).normal;
-
+            Collider obstacleCollider = collision.collider;
+            float obstacleTopY = obstacleCollider.bounds.max.y;          
+            float obstacleHeight = obstacleCollider.bounds.size.y;        
+            float safeZoneMinY = obstacleTopY - (obstacleHeight * 0.15f); // Üst %15'lik kısım güvenli bölge (seam çarpmalarını önlemek için artırıldı)
+            float hitPointY = collision.GetContact(0).point.y;
 
             if (normal.y > 0.1f)
             {
-
+                return;
+            }
+            
+            // Eğer çarpışma noktasının yüksekliği güvenli bölgedeyse (yani objenin üstünde/geçişindeysen),
+            // hem önden (z) hem de yandan (x) çarpmaları göz ardı et! (Trenlerin arasından geçerken takılmamak için)
+            if (hitPointY >= safeZoneMinY)
+            {
+                Debug.Log("Bloğun üst %15'lik payına çarptı (Geçiş / Zıplama) - GÜVENLİ");
                 return;
             }
 
-            else if (normal.z < -0.5f)
+            if (normal.z < -0.5f)
             {
-
-                Collider obstacleCollider = collision.collider;
-                float obstacleTopY = obstacleCollider.bounds.max.y;          
-                float obstacleHeight = obstacleCollider.bounds.size.y;        
-                
-               
-                float safeZoneMinY = obstacleTopY - (obstacleHeight * 0.10f);
-                
-                
-                float hitPointY = collision.GetContact(0).point.y;
-
-                if (hitPointY >= safeZoneMinY)
-                {
-                    
-                    Debug.Log("Bloğun üst %10'luk payına çarptı - GÜVENLİ");
-                    return;
-                }
-                else
-                {
-                    
-                    Debug.Log("Büyük objeye ÖNDEN (alt %90'a) çarptı -> ÖLÜM");
-                    Die();
-                }
+                Debug.Log("Büyük objeye ÖNDEN (alt kısma) çarptı -> ÖLÜM");
+                Die();
             }
-           
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
                 Debug.Log("Büyük objeye YANDAN çarptı -> -1 KALP");

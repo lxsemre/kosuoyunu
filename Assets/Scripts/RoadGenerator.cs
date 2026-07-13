@@ -18,6 +18,7 @@ public class RoadGenerator : MonoBehaviour
 
     [Header("Bağlantılar")]
     public Transform playerTransform;       
+    public ObstacleSpawner obstacleSpawner; 
 
     private float spawnZ = 0f;
     private List<GameObject> activeRoads = new List<GameObject>();
@@ -79,6 +80,13 @@ public class RoadGenerator : MonoBehaviour
         road.transform.rotation = Quaternion.identity;
         road.SetActive(true);
         activeRoads.Add(road);
+
+        // Yol üzerine rastgele engeller yerleştir
+        if (obstacleSpawner != null)
+        {
+            obstacleSpawner.SpawnObstaclesOnRoad(spawnZ);
+        }
+
         spawnZ += pivotSpacing;  
     }
 
@@ -101,6 +109,13 @@ public class RoadGenerator : MonoBehaviour
             if (oldest.transform.position.z + roadForwardExtent < playerTransform.position.z - safeZone)
             {
                 activeRoads.RemoveAt(0);
+
+                // Önce yoldaki engelleri pool'a geri döndür
+                if (obstacleSpawner != null)
+                {
+                    obstacleSpawner.ReturnObstaclesFromRoad(oldest.transform.position.z);
+                }
+
                 oldest.SetActive(false);
 
                 if (prefabIndexMap.TryGetValue(oldest, out int index))

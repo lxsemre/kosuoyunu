@@ -1273,11 +1273,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616486010}
   m_CullTransparentMesh: 1
---- !u!1 &623251371 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7467213751277832866, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-  m_PrefabInstance: {fileID: 2039346511}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &712690608
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,6 +1454,72 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &898046488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 898046490}
+  - component: {fileID: 898046489}
+  m_Layer: 0
+  m_Name: ObstacleSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &898046489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898046488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5733f110d72fc42a377e863fd2617f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
+  smallObstaclePrefab: {fileID: 7441613461957118426, guid: bfff17db85e29ed4f90e85a7e6ddd307, type: 3}
+  bigObstaclePrefab: {fileID: 1660866339174248363, guid: 34bc65e0e99e0384fa198941b0a6e012, type: 3}
+  duckObstaclePrefab: {fileID: 8583411712111731368, guid: 43ff38e091808a74b91bfee3d84af0d7, type: 3}
+  goldPrefab: {fileID: 6849241533481833211, guid: 7273184b449adbc4f9fbd3a9f293bb5d, type: 3}
+  diamondPrefab: {fileID: 7214744306573795748, guid: 49072b3daee78804097c385e7862e306, type: 3}
+  rampPrefab: {fileID: 4408324834688451646, guid: d9359b7fbf9bf5c4fad970f727ce13ec, type: 3}
+  rampYPosition: 0.8
+  rampZOffset: 1.2
+  rampChance: 0.7
+  lanePositions:
+  - -2.5
+  - 0
+  - 2.5
+  sectionLength: 5
+  itemYPosition: 0.4
+  duckObstacleY: 1.5
+  smallPoolSize: 25
+  bigPoolSize: 15
+  duckPoolSize: 10
+  rampPoolSize: 10
+  goldPoolSize: 200
+  diamondPoolSize: 40
+--- !u!4 &898046490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898046488}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.28385, y: 1.83726, z: 78.68489}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1920,13 +1981,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoadGenerator
   roadPrefabs:
-  - {fileID: 623251371}
+  - {fileID: 8296936771356590806, guid: f4bd5e373fffca74a961257489428bfc, type: 3}
   pivotSpacing: 111
   roadForwardExtent: 86
   amountOfRoadsOnScreen: 5
   safeZone: 40
   poolSizePerPrefab: 8
   playerTransform: {fileID: 1717741627}
+  obstacleSpawner: {fileID: 898046489}
 --- !u!4 &1855306574
 Transform:
   m_ObjectHideFlags: 0
@@ -1942,63 +2004,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &2039346511
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6397336338406446326, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7467213751277832866, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
-      propertyPath: m_Name
-      value: ways
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 935af02379d9e1341aad0f8738f609bd, type: 3}
 --- !u!1 &2102289254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2147,4 +2152,4 @@ SceneRoots:
   - {fileID: 605967130}
   - {fileID: 956379475}
   - {fileID: 1855306574}
-  - {fileID: 2039346511}
+  - {fileID: 898046490}
