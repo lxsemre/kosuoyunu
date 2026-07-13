@@ -51,7 +51,7 @@ public class ObstacleSpawner : MonoBehaviour
     private Dictionary<GameObject, Queue<GameObject>> poolMap = new Dictionary<GameObject, Queue<GameObject>>();
     private Dictionary<float, List<GameObject>> activeByRoad = new Dictionary<float, List<GameObject>>();
 
-    // ====== BAŞLANGIÇ ======
+    
 
     void Start() { InitPools(); }
 
@@ -99,56 +99,54 @@ public class ObstacleSpawner : MonoBehaviour
         if (prefab == null) return;
         GameObject obj = GetFromPool(pool, prefab);
         obj.transform.position = new Vector3(x, y, z);
-        obj.transform.rotation = prefab.transform.rotation; // Prefab'ın rotasyonunu koru (rampa açısı vs.)
+        obj.transform.rotation = prefab.transform.rotation; 
         obj.SetActive(true);
         list.Add(obj);
     }
 
-    // ====== ANA SPAWN ======
+    
 
     public void SpawnObstaclesOnRoad(float roadZ)
     {
         List<GameObject> spawned = new List<GameObject>();
-        float z = roadZ + 10f;    // Yolun başından biraz boşluk
+        float z = roadZ + 10f;    
         float endZ = roadZ + 105f;
 
-        // ── SECTION DÖNGÜSÜ ──
-        // Engelin tipine göre aradaki mesafeyi (boşluğu) dinamik ayarlayacağız
+       
         while (z < endZ)
         {
             float roll = Random.value;
-            float currentSectionLength = 8f; // Varsayılan mesafe
+            float currentSectionLength = 8f; 
 
-            // Çıkacak engele göre bir sonraki engelle aradaki mesafeyi belirle
+            
             if (roll < 0.40f)
-                currentSectionLength = 14f; // Büyük Engel + Rampa çok uzun, mesafe fazla olmalı
+                currentSectionLength = 14f; 
             else if (roll < 0.55f)
-                currentSectionLength = 10f; // Eğilme engeli, kayma payı lazım
+                currentSectionLength = 10f; 
             else
-                currentSectionLength = 8f;  // Küçük engel, kısa mesafe yeterli
+                currentSectionLength = 8f;  
 
-            // 1) ENGEL GRUBU OLUŞTUR (Ve hangi şeritlerin dolduğunu al)
+            
             List<int> blockedLanes = SpawnObstacle(z, roll, spawned);
 
-            // 2) ALTINLARI BOŞ ŞERİTLERE DOLDUR
-            // Dolu şeritleri çıkarıp kesinlikle boş olan şeritleri seçiyoruz
+            
             List<int> freeLanes = new List<int> { 0, 1, 2 };
             freeLanes.RemoveAll(l => blockedLanes.Contains(l));
             
-            // Tüm boş şeritleri gez ve bol bol altın diz
+            
             foreach (int coinLane in freeLanes)
             {
-                // Her boş şeride %85 ihtimalle tam sıra altın diz (Böylece yan yana iki şerit altın dolabilir!)
+                
                 if (Random.value < 0.85f)
                 {
-                    // Altınları birbirine çok daha yakın diz (eskiden 2 birimdi, şimdi 1.2 birim)
+                    
                     int maxCoins = Mathf.FloorToInt((currentSectionLength - 2f) / 1.2f); 
                     if (maxCoins > 0)
                     {
                         int coinCount = Random.Range(Mathf.Max(2, maxCoins - 1), maxCoins + 1);
                         for (int i = 0; i < coinCount; i++)
                         {
-                            float coinZ = z + 2f + (i * 1.2f); // Engelden 2 birim sonra başlasın
+                            float coinZ = z + 2f + (i * 1.2f); 
                             if (coinZ >= endZ) break;
                             PlaceObj(goldPool, goldPrefab, lanePositions[coinLane], itemYPosition, coinZ, spawned);
                         }
@@ -156,7 +154,7 @@ public class ObstacleSpawner : MonoBehaviour
                 }
             }
 
-            // 3) Sonraki engele geçiş (Dinamik mesafe)
+            
             z += currentSectionLength; 
         }
 
@@ -173,14 +171,14 @@ public class ObstacleSpawner : MonoBehaviour
         activeByRoad.Remove(roadZ);
     }
 
-    // ====== TEK ENGEL GRUBU ======
+    
 
     List<int> SpawnObstacle(float z, float roll, List<GameObject> spawned)
     {
-        // Kaç lane engelli? Genelde 1, bazen 2
+        
         int blockedCount = (Random.value < 0.65f) ? 1 : 2;
 
-        // Şeritleri karıştır
+        
         List<int> lanes = new List<int> { 0, 1, 2 };
         Shuffle(lanes);
 
@@ -193,17 +191,17 @@ public class ObstacleSpawner : MonoBehaviour
 
             if (roll < 0.40f)
             {
-                // %40 → Büyük Engel
+                
                 SpawnBigCombo(z, lane, spawned);
             }
             else if (roll < 0.55f && duckObstaclePrefab != null)
             {
-                // %15 → Eğilme Engeli
+                
                 PlaceObj(duckPool, duckObstaclePrefab, lanePositions[lane], duckObstacleY, z, spawned);
             }
             else
             {
-                // %50 → Küçük Engel
+                
                 if (smallObstaclePrefab != null)
                 {
                     float sy = smallObstaclePrefab.transform.localScale.y / 2f;
@@ -215,7 +213,7 @@ public class ObstacleSpawner : MonoBehaviour
         return blockedLanes;
     }
 
-    // ====== BÜYÜK ENGEL KOMBOSU ======
+    
 
     void SpawnBigCombo(float z, int lane, List<GameObject> spawned)
     {
@@ -226,19 +224,19 @@ public class ObstacleSpawner : MonoBehaviour
         float bigH = bigObstaclePrefab.transform.localScale.y;
         float bigZ = bigObstaclePrefab.transform.localScale.z;
 
-        // BigObstacle yerleştir
+        
         PlaceObj(bigPool, bigObstaclePrefab, x, bigY, z, spawned);
 
-        // Rampa çıkma şansı (Inspector'dan ayarlanır)
+        
         bool hasRamp = rampPrefab != null && Random.value <= rampChance;
 
         if (hasRamp)
         {
-            // Rampa — Inspector'dan ayarlanabilir değerler
+            
             float rampZ = z - bigZ / 2f - rampZOffset;
             PlaceObj(rampPool, rampPrefab, x, rampYPosition, rampZ, spawned);
 
-            // Üstüne altın/elmas (ZORUNLU)
+            
             float topY = bigH + 0.5f;
             int topCount = 3;
             for (int j = 0; j < topCount; j++)
@@ -251,7 +249,7 @@ public class ObstacleSpawner : MonoBehaviour
                     PlaceObj(goldPool, goldPrefab, x, topY, iz, spawned);
             }
 
-            // Çift BigObstacle (%40 şans)
+           
             if (Random.value < 0.40f)
             {
                 float z2 = z + bigZ + 0.5f;
@@ -263,12 +261,12 @@ public class ObstacleSpawner : MonoBehaviour
                 }
             }
         }
-        // Rampa yoksa → üstüne item YOK
+        
     }
 
 
 
-    // ====== YARDIMCI ======
+   
 
     void Shuffle(List<int> list)
     {

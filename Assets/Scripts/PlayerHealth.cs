@@ -41,7 +41,7 @@ public class PlayerHealth : MonoBehaviour
             Collider obstacleCollider = collision.collider;
             float obstacleTopY = obstacleCollider.bounds.max.y;          
             float obstacleHeight = obstacleCollider.bounds.size.y;        
-            float safeZoneMinY = obstacleTopY - (obstacleHeight * 0.15f); // Üst %15'lik kısım güvenli bölge (seam çarpmalarını önlemek için artırıldı)
+            float safeZoneMinY = obstacleTopY - (obstacleHeight * 0.15f); 
             float hitPointY = collision.GetContact(0).point.y;
 
             if (normal.y > 0.1f)
@@ -49,8 +49,7 @@ public class PlayerHealth : MonoBehaviour
                 return;
             }
             
-            // Eğer çarpışma noktasının yüksekliği güvenli bölgedeyse (yani objenin üstünde/geçişindeysen),
-            // hem önden (z) hem de yandan (x) çarpmaları göz ardı et! (Trenlerin arasından geçerken takılmamak için)
+            
             if (hitPointY >= safeZoneMinY)
             {
                 Debug.Log("Bloğun üst %15'lik payına çarptı (Geçiş / Zıplama) - GÜVENLİ");

@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // Yüksek hızda yerin içinden geçmeyi önler
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous; 
 
         normalScale = transform.localScale;
         crouchScale = new Vector3(normalScale.x, normalScale.y / 2f, normalScale.z);
@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && targetX < 2.5f) targetX += 2.5f;
         if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) && targetX > -2.5f) targetX -= 2.5f;
 
-        // Yere değme kontrolü (Eski haline getirildi, zıplama hissini düzeltmek için)
+    
         bool isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
 
         if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && isGrounded)
@@ -57,12 +57,12 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
-        // Boy değiştiğinde merkezin kayması nedeniyle yerin içine girmeyi engellemek için offset
+        
         float yOffset = (normalScale.y - crouchScale.y) / 2f;
 
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
-            if (transform.localScale != crouchScale) // Sadece boyutu değişmemişse uygula
+            if (transform.localScale != crouchScale) 
             {
                 transform.localScale = crouchScale;
                 transform.position = new Vector3(transform.position.x, transform.position.y - yOffset, transform.position.z);
@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
             if (transform.localScale != normalScale)
             {
                 transform.localScale = normalScale;
-                // Büyürken ayakların yerin içine girmemesi için karakteri yukarı kaydır
+                
                 transform.position = new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z);
             }
         }
@@ -95,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!canMove) return;
 
-        // Fiziksel hareketi (hızı korumak ve takılmaları önlemek için) FixedUpdate içinde yapmalıyız
+       
         Vector3 currentPos = rb.position;
         Vector3 nextPos = currentPos + (Vector3.forward * forwardSpeed * Time.fixedDeltaTime);
         nextPos.x = Mathf.MoveTowards(currentPos.x, targetX, laneChangeSpeed * Time.fixedDeltaTime);
