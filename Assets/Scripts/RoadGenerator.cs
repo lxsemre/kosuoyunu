@@ -81,7 +81,7 @@ public class RoadGenerator : MonoBehaviour
         road.SetActive(true);
         activeRoads.Add(road);
 
-        // Yol üzerine rastgele engeller yerleştir
+        
         if (obstacleSpawner != null)
         {
             obstacleSpawner.SpawnObstaclesOnRoad(spawnZ);
@@ -90,7 +90,7 @@ public class RoadGenerator : MonoBehaviour
         spawnZ += pivotSpacing;  
     }
 
-    void ResetRoad(GameObject road)
+void ResetRoad(GameObject road)
     {
         Transform[] allChildren = road.GetComponentsInChildren<Transform>(true);
         foreach (Transform child in allChildren)

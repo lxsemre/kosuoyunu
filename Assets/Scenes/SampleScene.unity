@@ -1982,7 +1982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoadGenerator
   roadPrefabs:
   - {fileID: 8296936771356590806, guid: f4bd5e373fffca74a961257489428bfc, type: 3}
-  pivotSpacing: 111
+  pivotSpacing: 109.5
   roadForwardExtent: 86
   amountOfRoadsOnScreen: 5
   safeZone: 40
